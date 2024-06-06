@@ -40,7 +40,16 @@ fig.append_trace(go.Scatter(
 ), row=3, col=1)
 
 
-fig.update_layout(height=700, width=1300, title_text="VG01 20240517 Area (Pixel) Per Second", plot_bgcolor="whitesmoke", xaxis_title="Seconds", yaxis_title="Area (Pixel)")
+fig.update_layout(height=650, width=1250, title_text="VG01 20240517 Area (Pixel) Per Second", plot_bgcolor="white")
+
+fig.update_xaxes(row=1, col=1, title_text="Seconds", showline=True, linewidth=2, linecolor='black', dtick=50, tickvals = list(range(0, 1101, 50)), ticktext=[0, " ", 100, " ", 200, " ", 300, " ", 400, " ", 500, " ", 600, " ", 700, " ", 800, " ", 900, " ", 1000, " ", 1100], ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+fig.update_yaxes(row=1, col=1, title_text="Area (Pixels)", showline=True, linewidth=2, linecolor='black', dtick=100, tickvals = list(range(800, 1601, 100)), ticktext=[800, " ", 1000, " ", 1200, " ", 1400, " ", 1600], ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+
+fig.update_xaxes(row=2, col=1, title_text="Seconds", showline=True, linewidth=2, linecolor='black', dtick=50, tickvals = list(range(1150, 2251, 50)), ticktext=[" ", 1200, " ", 1300, " ", 1400, " ", 1500, " ", 1600, " ", 1700, " ", 1800, " ", 1900, " ", 2000, " ", 2100, " ", 2200, " "], ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+fig.update_yaxes(row=2, col=1, title_text="Area (Pixels)", showline=True, linewidth=2, linecolor='black', dtick=100, tickvals = list(range(800, 1601, 100)), ticktext=[800, " ", 1000, " ", 1200, " ", 1400, " ", 1600], ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+
+fig.update_xaxes(row=3, col=1, title_text="Seconds", showline=True, linewidth=2, linecolor='black', dtick=50, tickvals = list(range(2300, 3401, 50)), ticktext=[2300, " ", 2400, " ", 2500, " ", 2600, " ", 2700, " ", 2800, " ", 2900, " ", 3000, " ", 3100, " ", 3200, " ", 3300, " ", 3400], ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+fig.update_yaxes(row=3, col=1, title_text="Area (Pixels)", showline=True, linewidth=2, linecolor='black', dtick=100, tickvals = list(range(800, 1601, 100)), ticktext=[800, " ", 1000, " ", 1200, " ", 1400, " ", 1600], ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
 
 fig.show()
 # fig.write_image("VG01_20240517_Area_Per_Frame.pdf", format="pdf")
