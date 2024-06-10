@@ -36,7 +36,7 @@ def largest_valid_index(indexes, lst):
     return largest_index
 
 
-voltage = pd.read_csv("voltage.csv")
+voltage = pd.read_csv("../2p_camlog_alignment/voltage.csv")
 
 voltage_stim = []
 
