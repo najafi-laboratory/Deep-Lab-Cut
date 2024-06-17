@@ -11,7 +11,7 @@
 
 source /storage/home/hcoda1/3/ydhadwal3/myenv/bin/activate
 
-cd /storage/home/hcoda1/3/ydhadwal3/p-fnajafi3-0/FN16-PupilTrace-YD-2024-05-29              # Change to working directory
+cd /storage/coda1/p-fnajafi3/0/ydhadwal3/FN13_Joystick_0603-Yuvraj-2024-06-17             # Change to working directory
 
 module load cuda/12.1.1-6oacj6
 
