@@ -12,9 +12,9 @@ To start data analysis, there are a few key steps.
     a. This file will calculate the timestamps for each new frame based on that of the camera, 2p-imaging rig, and generic 30 fps and output an excel file \
     b. This file will also create another csv: voltage.csv
 7. Now it is time to run onset_time_alignment.py \
-    a. This file will take the voltage csv file and calculate all the times when a stimulus is shown to a mouse
-    b. Then for each stimulus, it will save a list of all the frames 2 seconds before and 2 seconds after
-    c. Then it will graph each of these where pupil area and stimuli are graphed on same plane to see relationship. There will be 100 graphs in each graph set.
-    d. It will save all these graph sets and show a few of them.
-    e. Afterwards it will calculate the average area of the pupil for each frame in the 4 second intervals for each stimulus
+    a. This file will take the voltage csv file and calculate all the times when a stimulus is shown to a mouse \
+    b. Then for each stimulus, it will save a list of all the frames 2 seconds before and 2 seconds after \
+    c. Then it will graph each of these where pupil area and stimuli are graphed on same plane to see relationship. There will be 100 graphs in each graph set. \
+    d. It will save all these graph sets and show a few of them. \
+    e. Afterwards it will calculate the average area of the pupil for each frame in the 4 second intervals for each stimulus \
     f. It will show and save this graph and one where pupil area is standardized.
