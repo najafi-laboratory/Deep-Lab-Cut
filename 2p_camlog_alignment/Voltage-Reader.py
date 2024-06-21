@@ -3,11 +3,11 @@ import h5py
 import pandas as pd
 import cv2
 
-video = "VG01_V1_20240517_seq2b4o2_t_cam0_run001_20240517_151926.avi"
+video = "VG01_V1_20240515_seqf2b4o2_t_cam0_run004_20240515_090141.avi"
 
 def read_raw_voltages():
     f = h5py.File(
-        'fn13_raw_voltages.h5',
+        'raw_voltages.h5',
         'r')
     vol_time = np.array(f['raw']['vol_time'])
     vol_start_bin = np.array(f['raw']['vol_start_bin'])
@@ -23,7 +23,14 @@ voltage_df = pd.DataFrame(columns=["time", "vol_img_bin"])
 voltage_df["time"] = voltage[0]
 voltage_df["vol_img_bin"] = voltage[3]
 
-camlog = pd.read_excel("fn13_camlog.xlsx")
+voltage_csv = pd.DataFrame(columns=["vol_time", "vol_start_bin", "vol_stim_bin", "vol_img_bin"])
+voltage_csv["vol_time"] = voltage[0]
+voltage_csv["vol_start_bin"] = voltage[1]
+voltage_csv["vol_stim_bin"] = voltage[2]
+voltage_csv["vol_img_bin"] = voltage[3]
+voltage_csv.to_csv('voltage.csv')
+
+camlog = pd.read_excel("camlog.xlsx")
 
 cap = cv2.VideoCapture(video)
 
@@ -42,7 +49,7 @@ for index, row in voltage_df.iterrows():
         ms_per_frame_voltage.append(row["time"])
     if row["vol_img_bin"] != 1.0 and row["time"] - ms_per_frame_voltage[-1] > 2:
         ms_per_frame_voltage.append(row["time"])
-    if index == len(camlog):
+    if len(ms_per_frame_voltage) == len(camlog):
         break
 
 for index, row in camlog.iterrows():
@@ -60,4 +67,4 @@ ms_per_frame["voltage"] = ms_per_frame_voltage
 ms_per_frame["camlog"] = ms_per_frame_camlog
 ms_per_frame["cv2"] = ms_per_frame_cv2
 
-ms_per_frame.to_excel("fn13_voltage_camlog_frames_aligned.xlsx")
+ms_per_frame.to_excel("voltage_camlog_frames_aligned.xlsx")

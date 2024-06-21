@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Read the file
-file_name = "../VG01_V1_20240517_seq2b4o2_t_cam0_run001_20240517_151926DLC_resnet50_VG01_PupilTraceMay28shuffle1_150000.csv"
+file_name = "VG01_V1_20240515_seqf2b4o2_t_cam0_run004_20240515_090141DLC_resnet50_VG01_PupilTraceMay28shuffle1_150000.csv"
 data = pd.read_csv(file_name)
 
 
@@ -45,21 +45,21 @@ area["area"] = areas
 
 area.to_csv("area_per_frame.csv")
 
-
-# Function to calculate the average area for every 30 rows
-def calculate_average_area(area, window_size=30):
-    # Calculate the number of windows
-    num_windows = (len(area) + window_size - 1) // window_size  # Ceiling division
-
-    # Calculate the average area for each window
-    averages = [area.iloc[i * window_size:(i + 1) * window_size]['area'].mean() for i in range(num_windows)]
-
-    return averages
-
-
-# Calculate the average area for every 30 rows
-average_areas = calculate_average_area(area, window_size=30)
-average_area = pd.DataFrame()
-average_area["area"] = average_areas
-average_area.to_csv("area_per_second.csv")
+#
+# # Function to calculate the average area for every 30 rows
+# def calculate_average_area(area, window_size=30):
+#     # Calculate the number of windows
+#     num_windows = (len(area) + window_size - 1) // window_size  # Ceiling division
+#
+#     # Calculate the average area for each window
+#     averages = [area.iloc[i * window_size:(i + 1) * window_size]['area'].mean() for i in range(num_windows)]
+#
+#     return averages
+#
+#
+# # Calculate the average area for every 30 rows
+# average_areas = calculate_average_area(area, window_size=30)
+# average_area = pd.DataFrame()
+# average_area["area"] = average_areas
+# average_area.to_csv("area_per_second.csv")
 
