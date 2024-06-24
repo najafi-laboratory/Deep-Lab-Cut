@@ -185,41 +185,39 @@ for i in range(0, len(average_stim), 31):
     average_stim_frames[k] = average_stim_frames[k] / 31
     k = k + 1
 
-for i in range(len(average_stim_frames)):
-    average_stim_frames[i] *= 5
-stim_df = pd.DataFrame(data=average_stim_frames,columns=['average_stim'])
+stan_average_stim_frames = []
 
-# stan_vol = np.full(len(pupil_area_per_stim[0]), 0)
-# for i in range(6):
-#     stan_vol[64 + i] = 1
-#
-# vol = np.full(len(pupil_area_per_stim[0]), 1100)
-# for i in range(6):
-#     vol[64 + i] = 1200
-#
-# fig = go.Figure()
-#
-# fig.add_trace(go.Scatter(x=area_df.index, y=area_df.average_area, line=dict(color='black'), showlegend=False))
-# fig.add_trace(go.Scatter(x=stim_df.index, y=stim_df.average_stim, line=dict(color='green'), showlegend=False))
-#
-# fig.update_xaxes(title_text="Time (Seconds)", showline=True, linewidth=2, linecolor='black',
-#                          tickvals=list(range(0, 129, 16)),
-#                          ticktext=[-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2], ticks="outside", tickwidth=1,
-#                          tickcolor='black', ticklen=7)
-# fig.update_yaxes(title_text="Area in Pixels", showline=True, linewidth=2, linecolor='black',
-#                          ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
-#
-# # FIX TITLE NAME
-# fig.update_layout(title="VG01 20240515 Average Pupil Area vs Voltage Stim", height=500, width=1250, plot_bgcolor="white")
-#
-# # Show the interactive plot
-# fig.show()
-# fig.write_html("average_onset_alignment.html")
+for i in range(len(average_stim_frames)):
+    stan_average_stim_frames.append(average_stim_frames[i])
+    average_stim_frames[i] *= 100
+    stan_average_stim_frames[i] *= 5
+    average_stim_frames[i] += 800
+stim_df = pd.DataFrame(data=average_stim_frames,columns=['average_stim'])
+stan_stim_df = pd.DataFrame(data=stan_average_stim_frames,columns=['average_stim'])
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(x=area_df.index, y=area_df.average_area, line=dict(color='black'), showlegend=False))
+fig.add_trace(go.Scatter(x=stim_df.index, y=stim_df.average_stim, line=dict(color='green'), showlegend=False))
+
+fig.update_xaxes(title_text="Time (Seconds)", showline=True, linewidth=2, linecolor='black',
+                         tickvals=list(range(0, 129, 16)),
+                         ticktext=[-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2], ticks="outside", tickwidth=1,
+                         tickcolor='black', ticklen=7)
+fig.update_yaxes(title_text="Area in Pixels", showline=True, linewidth=2, linecolor='black',
+                         ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+
+# FIX TITLE NAME
+fig.update_layout(title="VG01 20240515 Average Pupil Area vs Average Voltage Stim", height=500, width=1250, plot_bgcolor="white")
+
+# Show the interactive plot
+fig.show()
+fig.write_html("average_onset_alignment.html")
 
 fig = go.Figure()
 
 fig.add_trace(go.Scatter(x=stan_area_df.index, y=stan_area_df.average_area, line=dict(color='black'), showlegend=False))
-fig.add_trace(go.Scatter(x=stim_df.index, y=stim_df.average_stim, line=dict(color='green'), showlegend=False))
+fig.add_trace(go.Scatter(x=stan_stim_df.index, y=stan_stim_df.average_stim, line=dict(color='green'), showlegend=False))
 
 fig.update_xaxes(title_text="Time (Seconds)", showline=True, linewidth=2, linecolor='black',
                          tickvals=list(range(0, 129, 16)),
@@ -229,7 +227,7 @@ fig.update_yaxes(title_text="Area in Pixels (Standardized)", showline=True, line
                          ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
 
 # FIX ME
-fig.update_layout(title="VG01 20240515 Standardized Average Pupil Area vs Voltage Stim", height=500, width=1250, plot_bgcolor="white")
+fig.update_layout(title="VG01 20240515 Standardized Average Pupil Area vs Average Voltage Stim", height=500, width=1250, plot_bgcolor="white")
 
 # Show the interactive plot
 fig.show()
