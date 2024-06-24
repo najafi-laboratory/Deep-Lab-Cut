@@ -4,7 +4,7 @@
 #SBATCH -N1 --gres=gpu:V100:1     		# Number of nodes and cores per node required
 #SBATCH --gres-flags=enforce-binding
 #SBATCH --mem-per-gpu=12G               # Memory per core
-#SBATCH -t2880                           # Duration of the job (Ex: 300 mins)
+#SBATCH -t2880                          # Duration of the job (Ex: 2880 mins or 2 days)
 #SBATCH -oReport-%j.out                         # Combined output and error messages file
 #SBATCH --mail-type=BEGIN,END,FAIL              # Mail preferences
 #SBATCH --mail-user=ydhadwal3@gatech.edu        # E-mail address for notifications
