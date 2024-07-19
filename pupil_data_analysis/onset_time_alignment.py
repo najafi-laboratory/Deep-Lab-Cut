@@ -92,98 +92,98 @@ for i in range(len(frame_times)):
             stims.append(voltage.iloc[int(voltage_times[i] * 2) - 2030: int(voltage_times[i] * 2) + 2000, 3])
         j = j + 1
 
-# # Creates a Graph Set of Subplots where each Graph Set contains ~100 Subplots graphing pupil area vs stim values
-# index = 0
-# maxIndex = int(len(pupil_area_per_stim) / 100)
-#
-# while index < maxIndex:
-#     # Creates each subplot and creates a placeholder subplot title
-#     fig = make_subplots(rows=int(len(pupil_area_per_stim) / maxIndex), cols=1, subplot_titles=['temp_subtitle'
-#                                                                                                for date in np.arange(
-#                                                                                                 len(pupil_area_per_stim)
-#                                                                                                 )])
-#     # Creates pupil area subplot graphs in each graphset
-#     for i in range(index * int(len(pupil_area_per_stim) / maxIndex),
-#                    (index + 1) * int(len(pupil_area_per_stim) / maxIndex)):
-#         fig.append_trace(go.Scatter(
-#             x=pupil_area_per_stim[i].index,
-#             y=list(pupil_area_per_stim[i]),
-#             showlegend=False,
-#             line=dict(color='black'),
-#         ), row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex), col=1)
-#
-#         j = 0
-#         y = []
-#         # Finds number of stim spikes before and after current stim spike that are in each subplot
-#         start = find_smallest_positive(i, pupil_area_per_stim[i].index[0], pupil_stim_frames)
-#         end = largest_valid_index([i + 1, i + 2, i + 3], pupil_stim_frames)
-#
-#         # Manually graphs stim values since pupil area is calculated per frame but stims are calculated as 1/2 ms
-#         while start <= end and j < len(pupil_area_per_stim[i]):
-#             if pupil_area_per_stim[i].index[j] < pupil_stim_frames[start]:
-#                 y.append(1000)
-#                 j = j + 1
-#             else:
-#                 j = j + 6
-#                 start = start + 1
-#                 for z in range(6):
-#                     y.append(1200)
-#
-#         if end == len(pupil_stim_frames) - 1:
-#             for z in range(len(y), len(pupil_area_per_stim[i])):
-#                 y.append(1000)
-#
-#         # Adds the stim trace onto the subplots
-#         fig.append_trace(go.Scatter(
-#             x=pupil_area_per_stim[i].index,
-#             y=y,
-#             showlegend=False,
-#             line=dict(color='green'),
-#         ), row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex), col=1)
-#
-#         # Updates all the labels around each of the subplots
-#         fig.layout.annotations[i - index * int(len(pupil_area_per_stim) / maxIndex)]['text'] = "Subplot " + str(
-#             i + 1) + ": Frames " + str(pupil_area_per_stim[i].index[0]) + " - " + str(
-#             pupil_area_per_stim[i].index[-1]) + " and Seconds: " + str(
-#             round(pupil_area_per_stim[i].index[0] / 30)) + " - " + str(round(pupil_area_per_stim[i].index[-1] / 30))
-#         fig.update_xaxes(row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex),
-#                          col=1,
-#                          title_text="Time (Seconds)",
-#                          showline=True,
-#                          linewidth=2,
-#                          linecolor='black',
-#                          tickvals=list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[0], -15)) + (
-#                              list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[-1], 15))),
-#                          ticktext=[0, -0.5, -1, -1.5, -2, 0.5, 0.5, 1, 1.5, 2],
-#                          ticks="outside",
-#                          tickwidth=1,
-#                          tickcolor='black',
-#                          ticklen=7)
-#         fig.update_yaxes(row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex),
-#                          col=1,
-#                          title_text="Pupil Area (Pixels)",
-#                          showline=True,
-#                          linewidth=2,
-#                          linecolor='black',
-#                          dtick=100,
-#                          tickvals=list(range(600, 1601, 100)),
-#                          ticktext=[600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600],
-#                          ticks="outside",
-#                          tickwidth=1,
-#                          tickcolor='black',
-#                          ticklen=7)
-#
-#     fig.update_layout(title="Graph Set " + str(index + 1) + " " + mouse + " Pupil Area vs Voltage Stim",
-#                       height=250 * 100,
-#                       width=1250,
-#                       plot_bgcolor="white")
-#
-#     fig.write_html("graph_set_" + str(index + 1) + "_" + mouse + "_pupil_area_vs_voltage_stim.html")
-#
-#     # Shows the first 5 Graph Sets to confirm everything is working as intended
-#     if index < 5:
-#         fig.show()
-#     index = index + 1
+# Creates a Graph Set of Subplots where each Graph Set contains ~100 Subplots graphing pupil area vs stim values
+index = 0
+maxIndex = int(len(pupil_area_per_stim) / 100)
+
+while index < maxIndex:
+    # Creates each subplot and creates a placeholder subplot title
+    fig = make_subplots(rows=int(len(pupil_area_per_stim) / maxIndex), cols=1, subplot_titles=['temp_subtitle'
+                                                                                               for date in np.arange(
+                                                                                                len(pupil_area_per_stim)
+                                                                                                )])
+    # Creates pupil area subplot graphs in each graphset
+    for i in range(index * int(len(pupil_area_per_stim) / maxIndex),
+                   (index + 1) * int(len(pupil_area_per_stim) / maxIndex)):
+        fig.append_trace(go.Scatter(
+            x=pupil_area_per_stim[i].index,
+            y=list(pupil_area_per_stim[i]),
+            showlegend=False,
+            line=dict(color='black'),
+        ), row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex), col=1)
+
+        j = 0
+        y = []
+        # Finds number of stim spikes before and after current stim spike that are in each subplot
+        start = find_smallest_positive(i, pupil_area_per_stim[i].index[0], pupil_stim_frames)
+        end = largest_valid_index([i + 1, i + 2, i + 3], pupil_stim_frames)
+
+        # Manually graphs stim values since pupil area is calculated per frame but stims are calculated as 1/2 ms
+        while start <= end and j < len(pupil_area_per_stim[i]):
+            if pupil_area_per_stim[i].index[j] < pupil_stim_frames[start]:
+                y.append(1000)
+                j = j + 1
+            else:
+                j = j + 6
+                start = start + 1
+                for z in range(6):
+                    y.append(1200)
+
+        if end == len(pupil_stim_frames) - 1:
+            for z in range(len(y), len(pupil_area_per_stim[i])):
+                y.append(1000)
+
+        # Adds the stim trace onto the subplots
+        fig.append_trace(go.Scatter(
+            x=pupil_area_per_stim[i].index,
+            y=y,
+            showlegend=False,
+            line=dict(color='green'),
+        ), row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex), col=1)
+
+        # Updates all the labels around each of the subplots
+        fig.layout.annotations[i - index * int(len(pupil_area_per_stim) / maxIndex)]['text'] = "Subplot " + str(
+            i + 1) + ": Frames " + str(pupil_area_per_stim[i].index[0]) + " - " + str(
+            pupil_area_per_stim[i].index[-1]) + " and Seconds: " + str(
+            round(pupil_area_per_stim[i].index[0] / 30)) + " - " + str(round(pupil_area_per_stim[i].index[-1] / 30))
+        fig.update_xaxes(row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex),
+                         col=1,
+                         title_text="Time (Seconds)",
+                         showline=True,
+                         linewidth=2,
+                         linecolor='black',
+                         tickvals=list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[0], -15)) + (
+                             list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[-1], 15))),
+                         ticktext=[0, -0.5, -1, -1.5, -2, 0.5, 0.5, 1, 1.5, 2],
+                         ticks="outside",
+                         tickwidth=1,
+                         tickcolor='black',
+                         ticklen=7)
+        fig.update_yaxes(row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex),
+                         col=1,
+                         title_text="Pupil Area (Pixels)",
+                         showline=True,
+                         linewidth=2,
+                         linecolor='black',
+                         dtick=100,
+                         tickvals=list(range(600, 1601, 100)),
+                         ticktext=[600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600],
+                         ticks="outside",
+                         tickwidth=1,
+                         tickcolor='black',
+                         ticklen=7)
+
+    fig.update_layout(title="Graph Set " + str(index + 1) + " " + mouse + " Pupil Area vs Voltage Stim",
+                      height=250 * 100,
+                      width=1250,
+                      plot_bgcolor="white")
+
+    fig.write_html("graph_set_" + str(index + 1) + "_" + mouse + "_pupil_area_vs_voltage_stim.html")
+
+    # Shows the first 5 Graph Sets to confirm everything is working as intended
+    if index < 5:
+        fig.show()
+    index = index + 1
 
 # Now it is time to create the overall graph to observe trends
 
