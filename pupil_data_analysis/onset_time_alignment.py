@@ -3,7 +3,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-# import plotly.express as px
 
 
 def find_smallest_positive(i, startingIndex, stim_frames):
@@ -45,10 +44,16 @@ def largest_valid_index(indexes, lst):
     return largest_index
 
 
+# Take User Input on Mouse Name
+mouse = input("What is the Mouse Name and Session ID? (EX: VG01_20240515)       ")
+
+# Convert relevant csv/excel files into Pandas Data Frames
 frame_times = pd.read_excel("../2p_camlog_alignment/voltage_camlog_frames_aligned.xlsx").iloc[:, 2]
 voltage_times = pd.read_excel("../2p_camlog_alignment/voltage_camlog_frames_aligned.xlsx").iloc[:, 1]
 voltage = pd.read_csv("../2p_camlog_alignment/voltage.csv")
+area_per_frame = pd.read_csv("area_per_frame_no_outliers.csv")
 
+# Voltage stim is a list containing times when 2p imaging voltage first spikes
 voltage_stim = []
 last_stim = 0
 
@@ -60,12 +65,15 @@ for index, row in voltage.iterrows():
     elif row["vol_stim_bin"] != last_stim:
         last_stim = 0
 
-area_per_frame = pd.read_csv("minmax_scale.csv")
-
 j = 0
 
+# List of Pandas Series where index is index of 2p voltage spike and
+# Series is pupil area 2 seconds before and after the spike
 pupil_area_per_stim = []
+# List of frames associated with 2p voltage spikes
 pupil_stim_frames = []
+# List of Pandas Series where index is index of 2p voltage spike and
+# Series is stim value 2 seconds before and after the spike
 stims = []
 
 # # saves all the pupil data 2 seconds before and 2 seconds after stim onset time
@@ -73,77 +81,114 @@ for i in range(len(frame_times)):
     if j >= len(voltage_stim):
         break
     if frame_times.get(i) > voltage_stim[j]:
-        if abs(frame_times.get(i) - voltage_stim[j] + 16) > abs(frame_times.get(i-1) - voltage_stim[j] + 16):
-            pupil_area_per_stim.append(area_per_frame.iloc[i - 64 : i + 65, 1])
-            stims.append(voltage.iloc[int(voltage_times[i] * 2) - 2000 : int(voltage_times[i] * 2) + 2030, 3])
+        if abs(frame_times.get(i) - voltage_stim[j] + 16) > abs(frame_times.get(i - 1) - voltage_stim[j] + 16):
+            pupil_area_per_stim.append(area_per_frame.iloc[i - 64: i + 65, 1])
+            stims.append(voltage.iloc[int(voltage_times[i] * 2) - 2000: int(voltage_times[i] * 2) + 2030, 3])
             pupil_stim_frames.append(i)
         else:
-            pupil_area_per_stim.append(area_per_frame.iloc[i - 65 : i + 64, 1])
-            pupil_stim_frames.append(i-1)
+            pupil_area_per_stim.append(area_per_frame.iloc[i - 65: i + 64, 1])
+            pupil_stim_frames.append(i - 1)
             stims.append(voltage.iloc[int(voltage_times[i] * 2) - 2030: int(voltage_times[i] * 2) + 2000, 3])
         j = j + 1
 
-# index = 0
-# maxIndex = int(len(pupil_area_per_stim) / 100)
-#
-# while index < maxIndex:
-#     fig = make_subplots(rows=int(len(pupil_area_per_stim) / maxIndex), cols=1, subplot_titles = ['temp_subtitle' for date in np.arange(len(pupil_area_per_stim))])
-#
-#     for i in range(index * int(len(pupil_area_per_stim)/maxIndex), (index+1)*int(len(pupil_area_per_stim)/maxIndex)):
-#         fig.append_trace(go.Scatter(
-#             x=pupil_area_per_stim[i].index,
-#             y=list(pupil_area_per_stim[i]),
-#             showlegend=False,
-#             line=dict(color='black'),
-#         ), row=i + 1 - index*int(len(pupil_area_per_stim)/maxIndex), col=1)
-#
-#         j = 0
-#         y = []
-#         start = find_smallest_positive(i, pupil_area_per_stim[i].index[0], pupil_stim_frames)
-#         end = largest_valid_index([i + 1, i + 2, i + 3], pupil_stim_frames)
-#
-#         while start <= end and j < len(pupil_area_per_stim[i]):
-#             if pupil_area_per_stim[i].index[j] < pupil_stim_frames[start]:
-#                 y.append(1000)
-#                 j = j + 1
-#             else:
-#                 j = j + 6
-#                 start = start + 1
-#                 for z in range(6):
-#                     y.append(1200)
-#
-#         if end == len(pupil_stim_frames) - 1:
-#             for z in range(len(y), len(pupil_area_per_stim[i])):
-#                 y.append(1000)
-#
-#         fig.append_trace(go.Scatter(
-#             x=pupil_area_per_stim[i].index,
-#             y=y,
-#             showlegend=False,
-#             line=dict(color='green'),
-#         ), row=i + 1 - index*int(len(pupil_area_per_stim)/maxIndex), col=1)
-#
-#         fig.layout.annotations[i - index*int(len(pupil_area_per_stim)/maxIndex)]['text'] = "Subplot " + str(i+1) + ": Frames " + str(pupil_area_per_stim[i].index[0]) + " - " + str(pupil_area_per_stim[i].index[-1]) + " and Seconds: " + str(round(pupil_area_per_stim[i].index[0] / 30)) + " - " + str(round(pupil_area_per_stim[i].index[-1] / 30))
-#         fig.update_xaxes(row=i + 1 - index*int(len(pupil_area_per_stim)/maxIndex), col=1, title_text="Time (Seconds)", showline=True, linewidth=2, linecolor='black',
-#                          tickvals=list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[0], -15)) + (
-#                              list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[-1], 15))),
-#                          ticktext=[0, -0.5, -1, -1.5, -2, 0.5, 0.5, 1, 1.5, 2], ticks="outside", tickwidth=1,
-#                          tickcolor='black', ticklen=7)
-#         fig.update_yaxes(row=i + 1 - index*int(len(pupil_area_per_stim)/maxIndex), col=1, title_text="Area (Pixels)", showline=True, linewidth=2, linecolor='black',
-#                          dtick=100,
-#                          tickvals=list(range(600, 1601, 100)),
-#                          ticktext=[600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600],
-#                          ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
-#     # FIX ME
-#     fig.update_layout(title="VG01 20240515 Pupil Area vs Voltage Stim", height=250*100, width=1250, plot_bgcolor="white")
-#
-#     # FIX ME
-#     fig.write_html("Graph Set " + str(index+1) + " VG01_20240515_pupil_area_vs_voltage_stim.html")
-#     if index < 5:
-#         fig.show()
-#     index = index + 1
+# Creates a Graph Set of Subplots where each Graph Set contains ~100 Subplots graphing pupil area vs stim values
+index = 0
+maxIndex = int(len(pupil_area_per_stim) / 100)
 
+while index < maxIndex:
+    # Creates each subplot and creates a placeholder subplot title
+    fig = make_subplots(rows=int(len(pupil_area_per_stim) / maxIndex), cols=1, subplot_titles=['temp_subtitle'
+                                                                                               for date in np.arange(
+                                                                                                len(pupil_area_per_stim)
+                                                                                                )])
+    # Creates pupil area subplot graphs in each graphset
+    for i in range(index * int(len(pupil_area_per_stim) / maxIndex),
+                   (index + 1) * int(len(pupil_area_per_stim) / maxIndex)):
+        fig.append_trace(go.Scatter(
+            x=pupil_area_per_stim[i].index,
+            y=list(pupil_area_per_stim[i]),
+            showlegend=False,
+            line=dict(color='black'),
+        ), row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex), col=1)
+
+        j = 0
+        y = []
+        # Finds number of stim spikes before and after current stim spike that are in each subplot
+        start = find_smallest_positive(i, pupil_area_per_stim[i].index[0], pupil_stim_frames)
+        end = largest_valid_index([i + 1, i + 2, i + 3], pupil_stim_frames)
+
+        # Manually graphs stim values since pupil area is calculated per frame but stims are calculated as 1/2 ms
+        while start <= end and j < len(pupil_area_per_stim[i]):
+            if pupil_area_per_stim[i].index[j] < pupil_stim_frames[start]:
+                y.append(1000)
+                j = j + 1
+            else:
+                j = j + 6
+                start = start + 1
+                for z in range(6):
+                    y.append(1200)
+
+        if end == len(pupil_stim_frames) - 1:
+            for z in range(len(y), len(pupil_area_per_stim[i])):
+                y.append(1000)
+
+        # Adds the stim trace onto the subplots
+        fig.append_trace(go.Scatter(
+            x=pupil_area_per_stim[i].index,
+            y=y,
+            showlegend=False,
+            line=dict(color='green'),
+        ), row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex), col=1)
+
+        # Updates all the labels around each of the subplots
+        fig.layout.annotations[i - index * int(len(pupil_area_per_stim) / maxIndex)]['text'] = "Subplot " + str(
+            i + 1) + ": Frames " + str(pupil_area_per_stim[i].index[0]) + " - " + str(
+            pupil_area_per_stim[i].index[-1]) + " and Seconds: " + str(
+            round(pupil_area_per_stim[i].index[0] / 30)) + " - " + str(round(pupil_area_per_stim[i].index[-1] / 30))
+        fig.update_xaxes(row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex),
+                         col=1,
+                         title_text="Time (Seconds)",
+                         showline=True,
+                         linewidth=2,
+                         linecolor='black',
+                         tickvals=list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[0], -15)) + (
+                             list(range(pupil_stim_frames[i], pupil_area_per_stim[i].index[-1], 15))),
+                         ticktext=[0, -0.5, -1, -1.5, -2, 0.5, 0.5, 1, 1.5, 2],
+                         ticks="outside",
+                         tickwidth=1,
+                         tickcolor='black',
+                         ticklen=7)
+        fig.update_yaxes(row=i + 1 - index * int(len(pupil_area_per_stim) / maxIndex),
+                         col=1,
+                         title_text="Pupil Area (Pixels)",
+                         showline=True,
+                         linewidth=2,
+                         linecolor='black',
+                         dtick=100,
+                         tickvals=list(range(600, 1601, 100)),
+                         ticktext=[600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600],
+                         ticks="outside",
+                         tickwidth=1,
+                         tickcolor='black',
+                         ticklen=7)
+
+    fig.update_layout(title="Graph Set " + str(index + 1) + " " + mouse + " Pupil Area vs Voltage Stim",
+                      height=250 * 100,
+                      width=1250,
+                      plot_bgcolor="white")
+
+    fig.write_html("graph_set_" + str(index + 1) + "_" + mouse + "_pupil_area_vs_voltage_stim.html")
+
+    # Shows the first 5 Graph Sets to confirm everything is working as intended
+    if index < 5:
+        fig.show()
+    index = index + 1
+
+# Now it is time to create the overall graph to observe trends
+
+# Average area of each of the subplots
 average_area = []
+# Average stim value of each subplot
 average_stim = []
 
 # For i in length of 2 seconds (64)
@@ -157,15 +202,13 @@ for i in range(len(pupil_area_per_stim[0])):
         else:
             # insert at i ms, the value originally and current stim value of that ms
             average_area[i] = average_area[i] + pupil_area_per_stim[j].iloc[i]
+            if i == 5:
+                print(str(j) + " j")
+                print(pupil_area_per_stim[j].iloc[i])
     # divide i ms by total number of stims
     average_area[i] = average_area[i] / len(pupil_area_per_stim)
 
-average_area_array = np.array(average_area).reshape(-1, 1)
-
-scaler = StandardScaler()
-stan_area_df = pd.DataFrame(data=scaler.fit_transform(average_area_array),columns=['average_area'])
-area_df = pd.DataFrame(data=average_area_array,columns=['average_area'])
-
+# Find average stims
 for i in range(len(stims[0])):
     for j in range(len(stims)):
         if j == 0:
@@ -174,61 +217,68 @@ for i in range(len(stims[0])):
             average_stim[i] = average_stim[i] + stims[j].iloc[i]
     average_stim[i] = average_stim[i] / len(stims)
 
-k = 0
-average_stim_frames = []
-for i in range(0, len(average_stim), 31):
-    for j in range(31):
-        if j == 0:
-            average_stim_frames.append(average_stim[i + j])
-        else:
-            average_stim_frames[k] = average_stim[i + j] + average_stim_frames[k]
-    average_stim_frames[k] = average_stim_frames[k] / 31
-    k = k + 1
+# Reshape the average area so we can standardize it
+average_area_array = np.array(average_area).reshape(-1, 1)
 
-stan_average_stim_frames = []
+# Standardizes Average Pupil Area and saves into dataframe
+scaler = StandardScaler()
+stan_area_df = pd.DataFrame(data=scaler.fit_transform(average_area_array), columns=['average_area'])
 
-for i in range(len(average_stim_frames)):
-    stan_average_stim_frames.append(average_stim_frames[i])
-    average_stim_frames[i] *= 0.2
-    stan_average_stim_frames[i] *= 5
-    average_stim_frames[i] += 0.2
-stim_df = pd.DataFrame(data=average_stim_frames,columns=['average_stim'])
-stan_stim_df = pd.DataFrame(data=stan_average_stim_frames,columns=['average_stim'])
+# Saves average stims into a dataframe
+stim_df = pd.DataFrame(data=average_stim, columns=['average_stim'])
 
-fig = go.Figure()
+# Time to create the graph
+fig = make_subplots()
 
-fig.add_trace(go.Scatter(x=area_df.index, y=area_df.average_area, line=dict(color='black'), showlegend=False, mode='markers'))
-fig.add_trace(go.Scatter(x=stim_df.index, y=stim_df.average_stim, line=dict(color='green'), showlegend=False, mode='markers'))
+fig.add_trace(
+    go.Scatter(x=stan_area_df.index,
+               y=stan_area_df.average_area,
+               line=dict(color='black'),
+               showlegend=False,
+               mode='lines'))
+fig.add_trace(
+    go.Scatter(x=stim_df.index,
+               y=stim_df.average_stim,
+               line=dict(color='green'),
+               showlegend=False,
+               mode='lines',
+               xaxis='x2',
+               yaxis='y2'))
 
-fig.update_xaxes(title_text="Time (Seconds)", showline=True, linewidth=2, linecolor='black',
-                         tickvals=list(range(0, 129, 16)),
-                         ticktext=[-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2], ticks="outside", tickwidth=1,
-                         tickcolor='black', ticklen=7)
-fig.update_yaxes(title_text="Area in Pixels", showline=True, linewidth=2, linecolor='black',
-                         ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
+fig.update_layout(
+    xaxis=dict(title_text="Time (Seconds)",
+               showline=True,
+               linewidth=2,
+               linecolor='black',
+               tickvals=list(range(0, 129, 16)),
+               ticktext=[-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2],
+               ticks="outside",
+               tickwidth=1,
+               tickcolor='black',
+               ticklen=7),
+    yaxis=dict(title_text="Standardized Average Pupil Area",
+               showline=True,
+               linewidth=2,
+               linecolor='black',
+               ticks="outside",
+               tickwidth=1,
+               tickcolor='black',
+               ticklen=7),
+    xaxis2=dict(title='',
+                tickvals=list(range(10, 11, 10)),
+                ticktext=[''],
+                overlaying='x',
+                side='top'),
+    yaxis2=dict(title='Average of 2p Voltage',
+                overlaying='y',
+                side='right'),
 
-# FIX TITLE NAME
-fig.update_layout(title="VG01 20240515 Average Pupil Area vs Average Voltage Stim", height=500, width=1250, plot_bgcolor="white")
+    title_text=mouse + ' Standardized Average Pupil Area vs Average Voltage Stim',
+    height=500,
+    width=1250,
+    plot_bgcolor="white"
+)
 
-# Show the interactive plot
+# Show and save interactive plot
 fig.show()
-fig.write_html("minmax_average_onset_alignment.html")
-
-# fig = go.Figure()
-#
-# fig.add_trace(go.Scatter(x=stan_area_df.index, y=stan_area_df.average_area, line=dict(color='black'), showlegend=False))
-# fig.add_trace(go.Scatter(x=stan_stim_df.index, y=stan_stim_df.average_stim, line=dict(color='green'), showlegend=False))
-#
-# fig.update_xaxes(title_text="Time (Seconds)", showline=True, linewidth=2, linecolor='black',
-#                          tickvals=list(range(0, 129, 16)),
-#                          ticktext=[-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2], ticks="outside", tickwidth=1,
-#                          tickcolor='black', ticklen=7)
-# fig.update_yaxes(title_text="Area in Pixels (Standardized)", showline=True, linewidth=2, linecolor='black',
-#                          ticks="outside", tickwidth=1, tickcolor='black', ticklen=7)
-#
-# # FIX ME
-# fig.update_layout(title="VG01 20240515 Standardized Average Pupil Area vs Average Voltage Stim", height=500, width=1250, plot_bgcolor="white")
-#
-# # Show the interactive plot
-# fig.show()
-# fig.write_html("standardized_average_onset_alignment.html")
+fig.write_html(mouse + "_multiaxes_minmax_average_onset_alignment.html")
