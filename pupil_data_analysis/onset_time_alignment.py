@@ -255,7 +255,7 @@ fig.add_trace(
     go.Scatter(x=stim_df.index,
                y=stim_df.average_stim,
                line=dict(color='#3BCEDE'),
-               opacity=0.3,
+               opacity=0.8,
                showlegend=True,
                mode='lines',
                name='Visual Stimulus',
@@ -282,8 +282,7 @@ fig.update_layout(
                tickwidth=1,
                tickcolor='black',
                ticklen=7),
-    yaxis=dict(title_text="Pupil Area " + "(" + str(round(std[0], 3)) + ", " + str(round(mean[0], 3)) + " +/- " +
-                          str(round(sem, 3)) + ")",
+    yaxis=dict(title_text="Pupil Area " + "(Norm, Mean +/- SEm)",
                showline=True,
                linewidth=2,
                linecolor='black',
