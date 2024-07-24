@@ -2,9 +2,9 @@
 
 import deeplabcut
 
-yaml_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN13_Joystick_0603-Yuvraj-2024-06-17/config.yaml"
-video_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN13_Joystick_0603-Yuvraj-2024-06-17/videos"
-output_folder = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN13_Joystick_0603-Yuvraj-2024-06-17/output"
+yaml_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN14-20240523-Yuvraj-Dhadwal-2024-07-24/config.yaml"
+video_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN14-20240523-Yuvraj-Dhadwal-2024-07-24/videos"
+output_folder = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN14-20240523-Yuvraj-Dhadwal-2024-07-24/output"
 
 deeplabcut.create_training_dataset(yaml_path, augmenter_type='imgaug')
 
