@@ -4,6 +4,7 @@ from plotly.subplots import make_subplots
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 import math
+import plotly.io as pio
 
 
 def find_smallest_positive(i, startingIndex, stim_frames):
@@ -46,12 +47,13 @@ def largest_valid_index(indexes, lst):
 
 
 # Take User Input on Mouse Name
-mouse = input("What is the Mouse Name and Session ID? (EX: VG01_20240515)       ")
+# mouse = input("What is the Mouse Name and Session ID? (EX: VG01_20240515)       ")
+mouse = "VG01_20240515"
 
 # Convert relevant csv/excel files into Pandas Data Frames
-frame_times = pd.read_excel("../2p_camlog_alignment/voltage_camlog_frames_aligned.xlsx").iloc[:, 2]
-voltage_times = pd.read_excel("../2p_camlog_alignment/voltage_camlog_frames_aligned.xlsx").iloc[:, 1]
-voltage = pd.read_csv("../2p_camlog_alignment/voltage.csv")
+frame_times = pd.read_excel("voltage_camlog_frames_aligned.xlsx").iloc[:, 2]
+voltage_times = pd.read_excel("voltage_camlog_frames_aligned.xlsx").iloc[:, 1]
+voltage = pd.read_csv("voltage.csv")
 area_per_frame = pd.read_csv("area_per_frame_no_outliers.csv")
 
 # Voltage stim is a list containing times when 2p imaging voltage first spikes
@@ -310,3 +312,4 @@ fig.update_layout(
 # Show and save interactive plot
 fig.show()
 fig.write_html(mouse + "_multiaxes_minmax_average_onset_alignment.html")
+pio.write_image(fig, mouse + "_multiaxes_minmax_average_onset_alignment.pdf")
