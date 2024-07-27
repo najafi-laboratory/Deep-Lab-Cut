@@ -48,7 +48,7 @@ def largest_valid_index(indexes, lst):
 
 # Take User Input on Mouse Name
 # mouse = input("What is the Mouse Name and Session ID? (EX: VG01_20240515)       ")
-mouse = "VG01_20240515"
+mouse = "FN16_20240621"
 
 # Convert relevant csv/excel files into Pandas Data Frames
 frame_times = pd.read_excel("voltage_camlog_frames_aligned.xlsx").iloc[:, 2]
@@ -181,10 +181,11 @@ while index < maxIndex:
                       plot_bgcolor="white")
 
     fig.write_html("graph_set_" + str(index + 1) + "_" + mouse + "_pupil_area_vs_voltage_stim.html")
+    pio.write_image(fig, "graph_set_" + str(index + 1) + "_" + mouse + "_pupil_area_vs_voltage_stim.pdf")
 
     # Shows the first 5 Graph Sets to confirm everything is working as intended
-    if index < 5:
-        fig.show()
+    # if index < 5:
+    #     fig.show()
     index = index + 1
 
 # Now it is time to create the overall graph to observe trends
@@ -310,6 +311,6 @@ fig.update_layout(
 )
 
 # Show and save interactive plot
-fig.show()
+# fig.show()
 fig.write_html(mouse + "_multiaxes_minmax_average_onset_alignment.html")
 pio.write_image(fig, mouse + "_multiaxes_minmax_average_onset_alignment.pdf")
