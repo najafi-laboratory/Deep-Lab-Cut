@@ -1,12 +1,12 @@
 import deeplabcut
 
-yaml_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN14-Passive-Yuvraj_Dhadwal-2024-07-24/config.yaml"
+yaml_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/PupilPerimeterTrack-Yuvraj-2024-08-28/config.yaml"
 # video_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN14-Passive-Yuvraj_Dhadwal-2024-07-24/videos"
 # output_folder = "/storage/coda1/p-fnajafi3/0/ydhadwal3/FN14-Passive-Yuvraj_Dhadwal-2024-07-24/output"
 
 deeplabcut.create_training_dataset(yaml_path, augmenter_type='imgaug')
 
-deeplabcut.train_network(yaml_path, maxiters=152000, saveiters=1000, max_snapshots_to_keep=3)
+deeplabcut.train_network(yaml_path, maxiters=500000, saveiters=50000, max_snapshots_to_keep=3)
 
 # deeplabcut.evaluate_network(yaml_path, plotting=True)
 
