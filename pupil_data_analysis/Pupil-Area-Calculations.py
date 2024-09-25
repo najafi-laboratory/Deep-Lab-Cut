@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Read the file
-file_name = "FN16_P_20240621_js_t_cam0_run002_20240621_152415DLC_resnet50_FN16-20240621Jul24shuffle1_200000.csv"
+file_name = "FN16_P_20240626_js_t_cam0_run007_20240624_141059DLC_resnet50_PupilPerimeterTrackAug28shuffle1_500000_filtered.csv"
 data = pd.read_csv(file_name)
 
 
@@ -20,18 +20,19 @@ def shoelace_formula(coords):
 
     return area
 
+
 # Drop extra rows and columns
 data = data.drop(columns=["scorer"])
 data = data.drop([0, 1])
 data.reset_index(drop=True, inplace=True)
 
-#Get the coordinates
+# Get the coordinates
 coordinate_cols_x = data.columns[::3]
 coordinate_cols_y = data.columns[1::3]
 
 areas = []
 
-#calulate the area for each row
+# Calculate the area for each row
 for index, row in data.iterrows():
     coords = pd.DataFrame({
         'x': row[coordinate_cols_x].values,
