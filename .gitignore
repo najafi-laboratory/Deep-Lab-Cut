@@ -5,3 +5,8 @@
 /*/*.camlog
 /*/*.html
 /*/*.mat
+.idea
+*.csv
+*.xlsx
+*.html
+test.py
