@@ -14,10 +14,13 @@ analysis_path = "/storage/coda1/p-fnajafi3/0/ydhadwal3/PupilPerimeterTrack-Yuvra
 # deeplabcut.evaluate_network(yaml_path, plotting=True)
 
 # Run the model on videos to get data
-deeplabcut.analyze_videos(yaml_path, [analysis_path], videotype='mp4', destfolder=analysis_path, save_as_csv=True)
+# deeplabcut.analyze_videos(yaml_path, [analysis_path], videotype='mp4', destfolder=analysis_path, save_as_csv=True)
 
 # Filter data to remove some outliers
-deeplabcut.filterpredictions(yaml_path, [analysis_path], shuffle=1, trainingsetindex=0, filtertype='median', windowlength=5)
+# deeplabcut.filterpredictions(yaml_path, [analysis_path], shuffle=1, trainingsetindex=0, filtertype='median', windowlength=5)
 
 # Create a labelled video to see model points on video
-deeplabcut.create_labeled_video(yaml_path, [analysis_path], filtered=True)
+# deeplabcut.create_labeled_video(yaml_path, [analysis_path], filtered=True)
+
+# Extracting outlier frames for retraining model
+deeplabcut.extract_outlier_frames(yaml_path, [analysis_path], outlieralgorithm='uncertain', extractionalgorithm='kmeans', automatic=True)
