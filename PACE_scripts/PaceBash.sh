@@ -4,12 +4,12 @@
 #SBATCH -N1 --gres=gpu:V100:1     		# Number of nodes and cores per node required
 #SBATCH --gres-flags=enforce-binding
 #SBATCH --mem-per-gpu=12G               # Memory per core
-#SBATCH -t60                          # Duration of the job (Ex: 2880 mins or 2 days)
+#SBATCH -t2880                          # Duration of the job (Ex: 2880 mins or 2 days)
 #SBATCH -oReport-%j.out                         # Combined output and error messages file
 #SBATCH --mail-type=BEGIN,END,FAIL              # Mail preferences
 #SBATCH --mail-user=ydhadwal3@gatech.edu        # E-mail address for notifications
 
-cd /storage/coda1/p-fnajafi3/0/ydhadwal3/PupilPerimeterTrack-Yuvraj-2024-08-28     # Change to working directory
+cd /storage/coda1/p-fnajafi3/0/ydhadwal3/eyeblink_conditioning-yuvrajdhadwal-2024-11-14     # Change to working directory
 
 module load anaconda3
 conda activate DEEPLABCUT
