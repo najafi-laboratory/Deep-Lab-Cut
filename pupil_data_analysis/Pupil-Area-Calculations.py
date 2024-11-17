@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # Read the file
-file_name = "FN16_P_20240626_js_t_cam0_run007_20240624_141059DLC_resnet50_PupilPerimeterTrackAug28shuffle1_500000_filtered.csv"
+file_name = "FN14_20240611_seq1420_t_cam0_run000_20240611_093859 (online-video-cutter.com)DLC_resnet50_PupilPerimeterTrackAug28shuffle1_500000_filtered.csv"
 data = pd.read_csv(file_name)
 
 

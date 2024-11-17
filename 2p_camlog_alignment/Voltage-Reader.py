@@ -5,6 +5,7 @@ import cv2
 
 video = "FN16_P_20240621_js_t_cam0_run002_20240621_152415.avi"
 
+# Reads the raw voltage h5 file
 def read_raw_voltages():
     f = h5py.File(
         'raw_voltages.h5',
@@ -16,13 +17,15 @@ def read_raw_voltages():
     f.close()
     return [vol_time, vol_start_bin, vol_stim_bin, vol_img_bin]
 
-
+# Creates a list of voltages
 voltage = read_raw_voltages()
-# print(voltage)
-voltage_df = pd.DataFrame(columns=["time", "vol_img_bin"])
-voltage_df["time"] = voltage[0]
-voltage_df["vol_img_bin"] = voltage[3]
 
+# Creates dataframe of voltage with time and vol_stim saved
+voltage_df = pd.DataFrame(columns=["time", "vol_stim_bin"])
+voltage_df["time"] = voltage[0]
+voltage_df["vol_stim_bin"] = voltage[2]
+
+# Converts the h5 into csv
 voltage_csv = pd.DataFrame(columns=["vol_time", "vol_start_bin", "vol_stim_bin", "vol_img_bin"])
 voltage_csv["vol_time"] = voltage[0]
 voltage_csv["vol_start_bin"] = voltage[1]
@@ -30,10 +33,11 @@ voltage_csv["vol_stim_bin"] = voltage[2]
 voltage_csv["vol_img_bin"] = voltage[3]
 voltage_csv.to_csv('voltage.csv')
 
+# Reads the camlog file
 camlog = pd.read_excel("camlog.xlsx")
 
+# Reads the video to double check the fps
 cap = cv2.VideoCapture(video)
-
 fps = cap.get(cv2.CAP_PROP_FPS)
 frame_duration_ms = 1000 / fps
 
@@ -42,14 +46,15 @@ ms_per_frame_camlog = []
 ms_per_frame_cv2 = []
 ms_per_frame = pd.DataFrame(columns=["voltage", "camlog", "cv2"])
 
+# for every voltage image
 for index, row in voltage_df.iterrows():
     if index == 0:
         continue
     if len(ms_per_frame_voltage) == len(camlog):
         break
-    if row["vol_img_bin"] != 1.0 and len(ms_per_frame_voltage) == 0:
+    if row["vol_stim_bin"] != 1.0 and len(ms_per_frame_voltage) == 0:
         ms_per_frame_voltage.append(row["time"])
-    if row["vol_img_bin"] != 1.0 and row["time"] - ms_per_frame_voltage[-1] > 2:
+    if row["vol_stim_bin"] != 1.0 and row["time"] - ms_per_frame_voltage[-1] > 2:
         ms_per_frame_voltage.append(row["time"])
 
 
