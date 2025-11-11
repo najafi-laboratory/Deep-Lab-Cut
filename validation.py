@@ -95,7 +95,7 @@ if __name__ == "__main__":
     path_to_model_output_folder = "" #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Model/Track-GroupName-2025-11-08/output"
     results_dir = "" # path_to_postproc_results_foler #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/postproc/results"
 
-    csv_dir_all = [d for d in os.listdir() if d.endswith('.csv')]
+    csv_dir_all = [d for d in os.listdir(path_to_model_output_folder) if d.endswith('.csv')]
 
     for csv_dir in csv_dir_all:
         # csv_dir = "/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Model/Body_tracking-Group Name-2025-11-05/output/yh24lg-trialvid-9-2025-10-23-120924-compressed_bGZTDDTRDLC_HrnetW48_Body_trackingNov5shuffle1_detector_best-100_snapshot_best-10.csv"	
