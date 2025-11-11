@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def write_graph_simulations(likelihoods, output_dir):
+def write_graph_simulations(likelihoods, results_dir, session_name):
     graph_simulations = go.Figure()
     
     for column in likelihoods.columns:
@@ -17,11 +17,11 @@ def write_graph_simulations(likelihoods, output_dir):
         showlegend=True
     )
     
-    graph_simulations.write_html(f'{output_dir}/graph_simulations.html')
+    graph_simulations.write_html(f'{results_dir}/{session_name}_graph_simulations.html')
     
 
 # plot the distribution of confidence levels, across all frames, for all body parts
-def write_likelihoods_allBodyParts(likelihoods, output_dir):
+def write_likelihoods_allBodyParts(likelihoods, results_dir, session_name):
     likelihoods_rounded = likelihoods.map(
         lambda x: round(float(x), 2) if isinstance(x, (int, float, str)) else x
     )
@@ -45,13 +45,11 @@ def write_likelihoods_allBodyParts(likelihoods, output_dir):
         labels={'Confidence Level': 'Confidence Level', 'Probability': 'Probability'}
     )
     
-    fig1.write_html(f'{output_dir}/confidence_plot_allBodyParts.html')
+    fig1.write_html(f'{results_dir}/{session_name}_confidence_plot_allBodyParts.html')
     
 
-
-#%%# plot the distribution of confidence levels, across all frames, for individual body parts
-
-def write_likelihoods_eachBodyPart(likelihoods, output_dir):
+# plot the distribution of confidence levels, across all frames, for individual body parts
+def write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name):
 
     fig1 = go.Figure()
 
@@ -85,7 +83,7 @@ def write_likelihoods_eachBodyPart(likelihoods, output_dir):
         )
         
 
-    fig1.write_html(f'{output_dir}/confidence_plot_eachBodyPart.html')
+    fig1.write_html(f'{results_dir}/{session_name}_confidence_plot_eachBodyPart.html')
 
 
 
@@ -93,18 +91,20 @@ def write_likelihoods_eachBodyPart(likelihoods, output_dir):
 
 
 if __name__ == "__main__":
-    # csv_dir = ""
-    # output_dir = ""
 
-    csv_dir = "/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Model/Body_tracking-Group Name-2025-11-05/output/yh24lg-trialvid-9-2025-10-23-120924-compressed_bGZTDDTRDLC_HrnetW48_Body_trackingNov5shuffle1_detector_best-100_snapshot_best-10.csv"	
-    output_dir = "/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Post_processing/Results"
+    path_to_model_output_folder = "" #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Model/Track-GroupName-2025-11-08/output"
+    results_dir = "" # path_to_postproc_results_foler #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/postproc/results"
 
-    
-    df = pd.read_csv(csv_dir)
+    csv_dir_all = [d for d in os.listdir() if d.endswith('.csv')]
 
+    for csv_dir in csv_dir_all:
+        # csv_dir = "/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Model/Body_tracking-Group Name-2025-11-05/output/yh24lg-trialvid-9-2025-10-23-120924-compressed_bGZTDDTRDLC_HrnetW48_Body_trackingNov5shuffle1_detector_best-100_snapshot_best-10.csv"	
+        
+        df = pd.read_csv(csv_dir)
+        likelihoods = df.iloc[2:, list(range(3, len(df.columns), 3))]
 
-    likelihoods = df.iloc[2:, list(range(3, len(df.columns), 3))]
-    
-    write_graph_simulations(likelihoods, output_dir)
-    write_likelihoods_allBodyParts(likelihoods, output_dir)
-    write_likelihoods_eachBodyPart(likelihoods, output_dir)
+        session_name = csv_dir.split("_HrnetW48")[0]
+        
+        write_graph_simulations(likelihoods, results_dir, session_name)
+        write_likelihoods_allBodyParts(likelihoods, results_dir, session_name)
+        write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name)
