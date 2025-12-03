@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def write_graph_simulations(likelihoods, results_dir, session_name):
+def write_graph_simulations(likelihoods, path_to_postproc_results_foler, session_name):
     graph_simulations = go.Figure()
     
     for column in likelihoods.columns:
@@ -17,11 +17,13 @@ def write_graph_simulations(likelihoods, results_dir, session_name):
         showlegend=True
     )
     
-    graph_simulations.write_html(f'{results_dir}/{session_name}_graph_simulations.html')
+    graph_simulations.write_html(f'{path_to_postproc_results_foler}/{session_name}_graph_simulations.html')
     
 
+
+
 # plot the distribution of confidence levels, across all frames, for all body parts
-def write_likelihoods_allBodyParts(likelihoods, results_dir, session_name):
+def write_likelihoods_allBodyParts(likelihoods, path_to_postproc_results_foler, session_name):
     likelihoods_rounded = likelihoods.map(
         lambda x: round(float(x), 2) if isinstance(x, (int, float, str)) else x
     )
@@ -45,11 +47,14 @@ def write_likelihoods_allBodyParts(likelihoods, results_dir, session_name):
         labels={'Confidence Level': 'Confidence Level', 'Probability': 'Probability'}
     )
     
-    fig1.write_html(f'{results_dir}/{session_name}_confidence_plot_allBodyParts.html')
-    
+    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}_confidence_plot_allBodyParts.html')
+
+
+
+
 
 # plot the distribution of confidence levels, across all frames, for individual body parts
-def write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name):
+def write_likelihoods_eachBodyPart(likelihoods, path_to_postproc_results_foler, session_name):
 
     fig1 = go.Figure()
 
@@ -66,14 +71,10 @@ def write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name):
         freq_map_df.columns = ['Confidence Level', 'Frequency']
         freq_map_df = freq_map_df.sort_values(by='Confidence Level', ascending=False)
         
-
         # Normalize frequencies to create a probability distribution
         freq_map_df['Probability'] = freq_map_df['Frequency'] / freq_map_df['Frequency'].sum()
         
-
-
         fig1.add_trace(go.Scatter(x=freq_map_df['Confidence Level'], y=freq_map_df['Probability'], mode='lines', name=str(df.loc[0,column])))
-
 
     fig1.update_layout(
             title="Frequency of Confidence Probability Distribution Function",
@@ -81,9 +82,8 @@ def write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name):
             yaxis_title='Probability',
             showlegend=True
         )
-        
-
-    fig1.write_html(f'{results_dir}/{session_name}_confidence_plot_eachBodyPart.html')
+    
+    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}_confidence_plot_eachBodyPart.html')
 
 
 
@@ -93,7 +93,7 @@ def write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name):
 if __name__ == "__main__":
 
     path_to_model_output_folder = "" #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/Model/Track-GroupName-2025-11-08/output"
-    results_dir = "" # path_to_postproc_results_foler #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/postproc/results"
+    path_to_postproc_results_foler = "" #"/storage/home/hcoda1/8/fnajafi3/r-fnajafi3-0/DLC/postproc/results"     
 
     csv_dir_all = [d for d in os.listdir(path_to_model_output_folder) if d.endswith('.csv')]
 
@@ -107,6 +107,6 @@ if __name__ == "__main__":
 
         session_name = csv_dir.split("_HrnetW48")[0]
         
-        write_graph_simulations(likelihoods, results_dir, session_name)
-        write_likelihoods_allBodyParts(likelihoods, results_dir, session_name)
-        write_likelihoods_eachBodyPart(likelihoods, results_dir, session_name)
+        write_graph_simulations(likelihoods, path_to_postproc_results_foler, session_name)
+        write_likelihoods_allBodyParts(likelihoods, path_to_postproc_results_foler, session_name)
+        write_likelihoods_eachBodyPart(likelihoods, path_to_postproc_results_foler, session_name)
