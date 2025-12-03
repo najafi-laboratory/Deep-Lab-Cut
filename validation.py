@@ -83,7 +83,7 @@ def make_fig_likelihood_dist_eachBodyParts(likelihoods, path_to_postproc_results
             showlegend=True
         )
     
-    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}__likelihood_dist_eachBodyPart.html')
+    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}_likelihood_dist_eachBodyPart.html')
 
 
 
