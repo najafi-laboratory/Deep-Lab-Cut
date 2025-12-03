@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def write_graph_simulations(likelihoods, path_to_postproc_results_foler, session_name):
+def make_fig_likelihood_vs_time_all_bodyparts(likelihoods, path_to_postproc_results_foler, session_name):
     graph_simulations = go.Figure()
     
     for column in likelihoods.columns:
@@ -17,13 +17,13 @@ def write_graph_simulations(likelihoods, path_to_postproc_results_foler, session
         showlegend=True
     )
     
-    graph_simulations.write_html(f'{path_to_postproc_results_foler}/{session_name}_graph_simulations.html')
+    graph_simulations.write_html(f'{path_to_postproc_results_foler}/{session_name}_likelihood_vs_time.html')
     
 
 
 
 # plot the distribution of confidence levels, across all frames, for all body parts
-def write_likelihoods_allBodyParts(likelihoods, path_to_postproc_results_foler, session_name):
+def make_fig_likelihood_dist_pooledBodyParts(likelihoods, path_to_postproc_results_foler, session_name):
     likelihoods_rounded = likelihoods.map(
         lambda x: round(float(x), 2) if isinstance(x, (int, float, str)) else x
     )
@@ -47,14 +47,14 @@ def write_likelihoods_allBodyParts(likelihoods, path_to_postproc_results_foler, 
         labels={'Confidence Level': 'Confidence Level', 'Probability': 'Probability'}
     )
     
-    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}_confidence_plot_allBodyParts.html')
+    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}_likelihood_dist_pooledBodyParts.html')
 
 
 
 
 
 # plot the distribution of confidence levels, across all frames, for individual body parts
-def write_likelihoods_eachBodyPart(likelihoods, path_to_postproc_results_foler, session_name):
+def make_fig_likelihood_dist_eachBodyParts(likelihoods, path_to_postproc_results_foler, session_name):
 
     fig1 = go.Figure()
 
@@ -83,7 +83,7 @@ def write_likelihoods_eachBodyPart(likelihoods, path_to_postproc_results_foler, 
             showlegend=True
         )
     
-    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}_confidence_plot_eachBodyPart.html')
+    fig1.write_html(f'{path_to_postproc_results_foler}/{session_name}__likelihood_dist_eachBodyPart.html')
 
 
 
@@ -107,6 +107,6 @@ if __name__ == "__main__":
 
         session_name = csv_dir.split("_HrnetW48")[0]
         
-        write_graph_simulations(likelihoods, path_to_postproc_results_foler, session_name)
-        write_likelihoods_allBodyParts(likelihoods, path_to_postproc_results_foler, session_name)
-        write_likelihoods_eachBodyPart(likelihoods, path_to_postproc_results_foler, session_name)
+        make_fig_likelihood_vs_time_all_bodyparts(likelihoods, path_to_postproc_results_foler, session_name)
+        make_fig_likelihood_dist_pooledBodyParts(likelihoods, path_to_postproc_results_foler, session_name)
+        make_fig_likelihood_dist_eachBodyParts(likelihoods, path_to_postproc_results_foler, session_name)
